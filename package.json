@@ -4,7 +4,8 @@
   "description": "This is a solidity contract for a basic NFT with mint price, token supply limit, and royalties based on OpenZeppelin ERC721 and extensions. It is built with node js, npm, and hardhat and includes unit tests.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat test",
+    "coverage": "npx hardhat coverage"
   },
   "keywords": [],
   "author": "David G. Smith",
