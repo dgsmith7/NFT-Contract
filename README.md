@@ -40,9 +40,11 @@
   <p align="center">
     This is a solidity contract for a basic NFT with mint price, token supply limit, and royalties based on OpenZeppelin ERC721 and extensions. It is built with node js, npm, and hardhat and includes unit tests.
 
-<br />
+<!-->
+<br/>
 <a href="https://github.com/dgsmith7/NFT-Contract"><strong>Explore the docs »</strong></a>
 <br />
+-->
 <br />
 <!--
 <a href="https://github.com/dgsmith7/NFT-Contract">View Demo</a>
