@@ -153,11 +153,11 @@ _See my other repo for a full stack working project - coming soon. [Full stack p
 
 ## Roadmap
 
-- [x] Set NFT price at depoyment (soon)
-- [x] Set token supply limit at deployment (soon)
-- [x] Set metadata (IPFS link) at deployment (soon)
+- [x] Set NFT price at depoyment
+- [x] Set token supply limit at deployment
+- [x] Set metadata (IPFS link) at deployment
 - [x] Unit tested with Hardhat toolbox (soon)
-- [x] Staging tested on Sepolia and OpenSea test network (soon)
+- [x] Staging tested on Mumbai and OpenSea test network (soon)
 
 See the [open issues](https://github.com/dgsmith7/NFT-Contract/issues) for a full list of proposed features (and known issues).
 
