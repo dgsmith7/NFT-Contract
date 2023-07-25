@@ -48,6 +48,14 @@ contract NFTContract is
         i_owner = msg.sender;
     }
 
+    receive() external payable {
+        revert NFTContract__WrongAvenueForThisTransaction();
+    }
+
+    fallback() external payable {
+        revert NFTContract__WrongAvenueForThisTransaction();
+    }
+
     function mintTo(
         string calldata uri // ipfs url string
     ) public payable nonReentrant returns (uint256) {
