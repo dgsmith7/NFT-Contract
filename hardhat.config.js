@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
-const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIE_PRIVATE_KEY;
+const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY;
 
 module.exports = {
   etherscan: {
