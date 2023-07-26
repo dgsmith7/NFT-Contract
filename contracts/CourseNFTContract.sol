@@ -29,6 +29,7 @@ contract CourseNFTContract is
     uint256 private immutable i_mint_price;
     uint256 private immutable i_max_tokens;
     string private s_base_uri;
+    string private s_token_uri_holder;
     address private immutable i_owner;
 
     event MintingCompleted(uint tokenId, address owner);
@@ -72,7 +73,8 @@ contract CourseNFTContract is
         uint256 newItemId = _tokenIdCounter.current();
         _safeMint(msg.sender, newItemId);
         emit MintingCompleted(newItemId, msg.sender);
-        super._setTokenURI(tokenId, uri);
+        s_token_uri_holder = uri;
+        //        super._setTokenURI(newItemId, uri);
         payable(i_owner).transfer(address(this).balance);
         // let platform know everyone was paid
         emit FundsDistributed(i_owner, msg.value);
@@ -124,7 +126,8 @@ contract CourseNFTContract is
     function tokenURI(
         uint256 tokenId
     ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-        return super.tokenURI(tokenId);
+        _requireMinted(tokenId);
+        return s_token_uri_holder;
     }
 
     function supportsInterface(
