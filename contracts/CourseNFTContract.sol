@@ -10,11 +10,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-error NFTContract__MaxSupplyReached();
-error NFTContract__ValueNotEqualPrice();
-error NFTContract__WrongAvenueForThisTransaction();
+error CourseNFTContract__MaxSupplyReached();
+error CourseNFTContract__ValueNotEqualPrice();
+error CourseNFTContract__WrongAvenueForThisTransaction();
 
-contract NFTContract is
+contract CourseNFTContract is
     ERC721,
     ERC721Enumerable,
     ERC721Burnable,
@@ -40,7 +40,7 @@ contract NFTContract is
         string memory _base_uri,
         address _royaltyArtist,
         uint96 _royaltyBasis
-    ) ERC721("NFT-Contract", "DGS") {
+    ) ERC721("CourseNFTContract", "CNC") {
         i_mint_price = _mint_price;
         i_max_tokens = _max_tokens;
         s_base_uri = _base_uri;
@@ -49,11 +49,11 @@ contract NFTContract is
     }
 
     receive() external payable {
-        revert NFTContract__WrongAvenueForThisTransaction();
+        revert CourseNFTContract__WrongAvenueForThisTransaction();
     }
 
     fallback() external payable {
-        revert NFTContract__WrongAvenueForThisTransaction();
+        revert CourseNFTContract__WrongAvenueForThisTransaction();
     }
 
     function mintTo(
@@ -62,11 +62,11 @@ contract NFTContract is
         uint256 tokenId = _tokenIdCounter.current();
         // check for supply limits
         if (tokenId >= i_max_tokens) {
-            revert NFTContract__MaxSupplyReached();
+            revert CourseNFTContract__MaxSupplyReached();
         }
         // make sure there is money
         if (msg.value != i_mint_price) {
-            revert NFTContract__ValueNotEqualPrice();
+            revert CourseNFTContract__ValueNotEqualPrice();
         }
         _tokenIdCounter.increment();
         uint256 newItemId = _tokenIdCounter.current();
