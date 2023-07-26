@@ -7,7 +7,7 @@ describe("CourseNFTContract", async function () {
   let courseNFTContract;
   let args = {
     mint_price: "2000000000000000000",
-    max_tokens: 7,
+    max_tokens: 3,
     base_uri:
       "https://ipfs.io/ipfs/bafkreidr5a7hvyiilxfug2yqpbkdowcahpbsw4jszstz6iur5ae5dx7b54",
     royaltyArtist: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
@@ -90,7 +90,7 @@ describe("CourseNFTContract", async function () {
       const expectedValue = args.royaltyArtist;
       const currentValue = await courseNFTContract.royaltyInfo(
         1,
-        "2000000000000000000"
+        ethers.parseUnits("2.0", "ether")
       );
       assert.equal(currentValue[0].toString(), expectedValue);
     });
@@ -99,7 +99,7 @@ describe("CourseNFTContract", async function () {
       const expectedValue = (args.royaltyBasis * args.mint_price) / 10000;
       const currentValue = await courseNFTContract.royaltyInfo(
         1,
-        "2000000000000000000"
+        ethers.parseUnits("2.0", "ether")
       );
       assert.equal(currentValue[1].toString(), expectedValue);
     });
@@ -110,75 +110,177 @@ describe("CourseNFTContract", async function () {
       assert.equal(currentValue.toString(), expectedValue);
     });
   });
+
+  describe("Receive function", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+    });
+
+    it("should be called and revert if called from low-level transaction", async function () {
+      let contractAddress = await courseNFTContract.getAddress();
+      const [buyer] = await ethers.getSigners();
+      await expect(
+        buyer.sendTransaction({
+          to: contractAddress,
+          value: ethers.parseUnits("2.0", "ether"),
+        })
+      ).to.be.revertedWithCustomError;
+    });
+  });
+
+  describe("Fallback function", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+    });
+
+    it("should be called and revert if called from low-level transaction with no data", async function () {
+      let contractAddress = await courseNFTContract.getAddress();
+      const [buyer] = await ethers.getSigners();
+      expect(buyer.sendTransaction({ to: contractAddress })).to.be
+        .revertedWithCustomError;
+    });
+  });
+
+  describe("mintTo function", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      let contractAddress = await courseNFTContract.getAddress();
+      const [buyer] = await ethers.getSigners();
+    });
+    /////////////
+    it("should revert if called with wrong amount of ether", async function () {
+      expect(buyer.sendTransaction({ to: contractAddress })).to.be.reverted;
+    });
+
+    it("should revert if called after all tokens are minted", async function () {
+      await expect(buyer.sendTransaction({ to: contractAddress })).to.be
+        .reverted;
+    });
+
+    it("should increase the tokenIdCounter by with with each mint", async function () {});
+
+    it("should emit an event when minting is completed", async function () {});
+
+    it("should have set the token uri during minting function", async function () {});
+
+    it("should have paid the owner the value that was sent", async function () {});
+
+    it("should have a balance of zero after minting", async function () {});
+
+    it("should emit an event after funds are distributed during mint", async function () {});
+  });
+
+  describe("getter functions", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+    });
+  });
+
+  describe("setRoylaty function", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+    });
+  });
+
+  describe("_baseUri function", async function () {
+    this.beforeEach(async function () {
+      courseNFTContractFactory = await ethers.getContractFactory(
+        "CourseNFTContract"
+      );
+      courseNFTContract = await courseNFTContractFactory.deploy(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+      await courseNFTContract.waitForDeployment(
+        args.mint_price,
+        args.max_tokens,
+        args.base_uri,
+        args.royaltyArtist,
+        args.royaltyBasis
+      );
+    });
+  });
 });
-
-/////////
-
-// how to call with payable during test?
-// describe("Minting function", async function () {
-//   it("should revert mint with max supply reached error if minting over max supply", async function () {
-//     await baconbitsNFT.mintTo();
-//     await baconbitsNFT.mintTo();
-//     await baconbitsNFT.mintTo();
-//     await expect(baconbitsNFT.mintTo()).to.be.reverted;
-//   });
-
-//   it("should revert if mint price does not equal transaction value on mint", async function () {});
-
-//   it("should increase the tokenIdCounter by with with each mint", async function () {});
-
-//   it("should emit an event when minting is completed", async function () {});
-
-//   it("should have a balance of zero after minting", async function () {});
-
-//   it("should emit an event after funds are distributed during mint", async function () {});
-// });
-
-// it("should be 0 if royaltyInfo is called without setting roylaties", async function () {
-//   const expectedValue = 0;
-//   const currentValue = await baconbitsNFT.royaltyInfo(0, 2000000000000000000);
-//   assert.equal(currentValue.toString(), expectedValue);
-// });
-
-//   describe("Setting disribution payees and shares", async function () {
-//     it("should have no payees if none are set", async function () {});
-
-//     it("should have exactly the number of payees that were set up", async function () {});
-
-//     it("Establishes a list of payees for payment distribution plan", async function () {
-//       const transactionResponse = await baconbitsNFT.setDistributionParameters(
-//         [
-//           "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",
-//           "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
-//           "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB",
-//           "0x617F2E2fD72FD9D5503197092aC168c91465E7f2",
-//           "0x17F6AD8Ef982297579C203069C1DbfFE4348c372",
-//         ],
-//         [750, 750, 500, 4000, 4000]
-//       );
-//       const expectedValue = "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2";
-//       await transactionResponse.wait(1);
-//       const currentValue = await baconbitsNFT.payees(0);
-//       assert.equal(currentValue.toString(), expectedValue);
-//     });
-
-//     it("Establishes a list of shares for payment distribution plan", async function () {
-//       const transactionResponse = await baconbitsNFT.setDistributionParameters(
-//         [
-//           "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",
-//           "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
-//           "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB",
-//           "0x617F2E2fD72FD9D5503197092aC168c91465E7f2",
-//           "0x17F6AD8Ef982297579C203069C1DbfFE4348c372",
-//         ],
-//         [750, 750, 500, 4000, 4000]
-//       );
-//       const expectedValue = "4000";
-//       await transactionResponse.wait(1);
-//       const currentValue = await baconbitsNFT.shares(4);
-//       assert.equal(currentValue.toString(), expectedValue);
-//     });
-
-//     it("should emit an event when payment distribution is set up", async function () {});
-//   });
-// });
