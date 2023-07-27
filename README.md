@@ -123,7 +123,7 @@ npm install npm@latest -g
 
 ### Installation
 
-Feel free to use the contractwithout going through all of these steps. But, follow the instructions below if you would like to install the project on your local machine so you can see the unit testing results, generate gas reports, see testing coverage, and deploy to a testnet or real net with this code, or just tinker around with hardhat (see the Patrick Collins video link in the acknowledgments at bottom).
+Feel free to use the contract without going through all of these steps. But, follow the instructions below if you would like to install the project on your local machine so you can see the unit testing results, generate gas reports, see testing coverage, and deploy to a testnet or real net with this code, or just tinker around with hardhat (see the Patrick Collins video link in the acknowledgments at bottom).
 
 1. Create a directory on your local machine where you want the project, then navigate to that directory.
 
