@@ -105,37 +105,83 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- GETTING STARTED
+<!-- GETTING STARTED -->
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+This is an example of how you may set up this project locally, if you like. To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
 
 - npm
-  ```sh
-  npm install npm@latest -g
-  ```
+
+```sh
+npm install npm@latest -g
+```
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
+If you would like to install the project on your local machine so you can see the unit testing results, generate gas reports, see testing coverage, and deploy to a testnet or real net with this code, follow the instructions below.
+
+1. Create a directory on your local machine where you want the project, then navigate to that directory.
+
 2. Clone the repo
-   ```sh
-   git clone https://github.com/dgsmith7/NFT-Contract.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = "ENTER YOUR API";
-   ```
+
+```sh
+git clone https://github.com/your_username_/Project-Name.git
+```
+
+3. Install NPM packages. This command will look in the package.json folder and install the needed dependencies.
+
+```sh
+npm install
+```
+
+4. Make your own .env file as depicted below, substituting the real info where you see lowercase in the example below. Then save it in the top level of the directory. The gitignore file contains .env so this info will not go to the repo. You will need to obtain API keys from several websites to accomplish this. Security: Keep these values secret and DO NOT push them to github. And PLEASE DO NOT use a Metamask wallet that has real currency in it. Make a new wallet that will never hold real currency and use it for the testing. If you are only planning to use the hardhat network, and not a testnet, there is no need to provide any of the info in this file (unless you want gas reports in USD, then provide the coinmarketcap info).
+
+```sh
+REPORT_GAS=true
+ETHERSCAN_API_KEY=enter you etherscan api key here
+ALCHEMY_API_KEY=enter your Alchemy api key here
+STUNT_WALLET_ADDRESS=enter your Metamask testing wallet address here (don't use a wallet with real currency)
+STUNT_WALLET_PRIVATE_KEY=enter your Metamask testing wallet private key here (don't use a wallet with real currency)
+COINMARKETCAP_API_KEY=enter your coinmarketcap api key here
+POLYGONSCAN_API_KEY=enter you polygonscan API api here
+```
+
+5. To compile the contract:
+
+```sh
+npx hardhat compile
+```
+
+6. To run unit tests:
+
+```sh
+npx hardhat test
+```
+
+The results will be displayed in the terminal window. A gas report will be generated and written to .gas-report.txt'. If you have provided a coinmarketcap api key, then USD values will be provided.
+
+7. To generate coverage report:
+
+```sh
+npx hardhat coverage
+```
+
+The results will be displayed in the terminal window. Fancier reports will be stored in a directory called 'coverage'. A great way to view them is the spin up a local http server and open index.html in the 'coverage' directory.
+
+8. To deploy:
+
+```sh
+npm run deploy
+```
+
+The terminal will display several messages as the contract deploys, verifies (if on a testnet), and mints three tokens. You should then be able to search that contract address on OpenSea testnet and view the tokens. Look in notes.txt to see the results from my attempt in late July. You can try the links there, but they may not persist.
+
+9. Please provide feedback to me if you see any errors in these instructions, the code, or the repo at large. Happy hardhatting!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -143,7 +189,7 @@ This is an example of how to list things you need to use the software and how to
 
 ## Usage
 
-You may confidently download and use this contract (courseNFTContract.sol) in your own NFT projects. This is really designed to be used from a front end that will make the appropriate calls to depoy and interact, generate the digital art and upload it to IPFS, and pass in the proper IPFS URLs to the contract and to each token as minted.
+You may confidently download and use this contract (courseNFTContract.sol), which has been verified, in your own NFT projects. This is really designed to be used from a front end that will make the appropriate calls to compile, deploy and interact with the contract, generate the digital art and upload it to IPFS, and pass in the proper IPFS URLs to the contract and to each token as minted.
 
 _See my other repo for a full stack working project - coming soon. [Full stack project](https://github.com/dgsmith7?tab=repositories)_
 
