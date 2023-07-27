@@ -25,7 +25,7 @@ module.exports = {
     outputFile: "gas-report.txt",
     noColors: true,
   },
-  defaultNetwork: "hardhat",
+  defaultNetwork: "polygonMumbai",
   networks: {
     hardhat: {
       chainId: 31337,
@@ -33,6 +33,7 @@ module.exports = {
     polygonMumbai: {
       url: ALCHEMY_URL,
       accounts: [STUNT_WALLET_PRIVATE_KEY],
+      gasPrice: 35000000000,
       chainId: 80001,
     },
     sepolia: {
@@ -45,7 +46,7 @@ module.exports = {
     version: "0.8.9",
     settings: {
       optimizer: {
-        enabled: true,
+        enabled: false, // may cause verification problems if true
       },
     },
   },

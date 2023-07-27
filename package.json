@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test",
-    "coverage": "npx hardhat coverage"
+    "coverage": "npx hardhat coverage",
+    "deploy": "node ./scripts/deploy.js"
   },
   "keywords": [],
   "author": "David G. Smith",
@@ -21,7 +22,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.2",
     "dotenv": "^16.3.1",
-    "hardhat": "^2.17.0"
+    "hardhat": "^2.17.0",
+    "npm-check-updates": "^16.10.17"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0"

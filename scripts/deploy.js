@@ -4,7 +4,7 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
-const { ethers, run, network } = require("hardhat");
+const { hre, ethers, run, network } = require("hardhat");
 
 async function main() {
   const args = {
@@ -12,21 +12,30 @@ async function main() {
     max_tokens: 3,
     base_uri:
       "https://ipfs.io/ipfs/QmTwiGMeNjhrECN5tHkSEN7jHDEQ3tvFzeCXF4f3EhZJzv",
-    royaltyArtist: process.env(STUNT_WALLET_ADDRESS),
+    royaltyArtist: process.env.STUNT_WALLET_ADDRESS,
     royaltyBasis: 500,
   };
-  const CourseNFTContractFactory = await ethers.getContractFactory(
-    "courseNFTContract"
+  const courseNFTContractFactory = await ethers.getContractFactory(
+    "CourseNFTContract"
   );
-  const courseNFTContract = await CourseNFTContractFactory.deploy(
+  const courseNFTContract = await courseNFTContractFactory.deploy(
     args.mint_price,
     args.max_tokens,
     args.base_uri,
     args.royaltyArtist,
     args.royaltyBasis
   );
-  // depoly
-  await courseNFTContract.waitForDeployment();
+  // deploy
+  console.log("Deploying...");
+  await courseNFTContract.waitForDeployment(
+    args.mint_price,
+    args.max_tokens,
+    args.base_uri,
+    args.royaltyArtist,
+    args.royaltyBasis
+  );
+  console.log("Waiting for block verifications...");
+  await courseNFTContract.deploymentTransaction().wait(15);
   let contractAddress = await courseNFTContract.getAddress();
   console.log(`Contract deployed to ${contractAddress}`);
   // verify
@@ -36,19 +45,28 @@ async function main() {
     (network.config.chainId === 1115511 && process.env.ETHERSCAN_API_KEY)
   ) {
     console.log("Verifying...");
-    await courseNFTContract.deployTransaction.wait(6);
-    await verify(contractAddress, []);
+    await verify(contractAddress, [
+      args.mint_price,
+      args.max_tokens,
+      args.base_uri,
+      args.royaltyArtist,
+      args.royaltyBasis,
+    ]);
     console.log("Completed.");
+  } else {
+    console.log("No verification available for hardhat network.");
   }
   // mint 3
   const ipfs = [
-    "https://ipfs.io/ipfs/bafkreidr5a7hvyiilxfug2yqpbkdowcahpbsw4jszstz6iur5ae5dx7b54",
-    "",
-    "",
+    "https://ipfs.io/ipfs/QmdKR2UxXcSLVptr6ggziRG4EKUYNSiS2AFEy3wUAHVqUt",
+    "https://ipfs.io/ipfs/QmQnABgoMhgP1t1gyopTS4EmsaPUZ6dwufpq1QWBZg4RyD",
+    "https://ipfs.io/ipfs/QmfKLqTkMSNiC3Kc7unLctWkJREWFv4gF8Cknhkdej3snb",
   ];
   console.log("Minting 3 tokens...");
   for (let i = 0; i < 3; i++) {
-    const transactionResponse = await courseNFTContract.mintTo(ipfs[i]);
+    const transactionResponse = await courseNFTContract.mintTo(ipfs[i], {
+      value: args.mint_price,
+    });
     await transactionResponse.wait(3);
     console.log(`Token ${i + 1} completed.`);
   }
@@ -62,7 +80,7 @@ async function verify(contractAddress, args) {
       constructorArguments: args,
     });
   } catch (err) {
-    if (err.message.toLowerCase.includes("already verified")) {
+    if (err.message.toLowerCase().includes("already verified")) {
       console.log("Already verified");
     } else {
       console.log(err);
