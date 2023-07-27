@@ -157,7 +157,7 @@ _See my other repo for a full stack working project - coming soon. [Full stack p
 - [x] Set token supply limit at deployment
 - [x] Set metadata (IPFS link) at deployment
 - [x] Unit tested with Hardhat toolbox
-- [ ] Staging tested on Mumbai and OpenSea test network (soon)
+- [x] Staging tested on Mumbai and OpenSea test network
 
 See the [open issues](https://github.com/dgsmith7/NFT-Contract/issues) for a full list of proposed features (and known issues).
 
@@ -205,7 +205,7 @@ Project Link: [https://github.com/dgsmith7/NFT-Contract](https://github.com/dgsm
 - [FreeCodeCamp - Patrick Collins Full Stack Web3 Dev Course](https://www.youtube.com/watch?v=gyMwXuJrbJQ&t=85023s)
 - [Microsoft VS Code](https://code.visualstudio.com)
 - [Remix](https://remix.ethereum.org)
-- [Southern Methodist University - Center of Creative Comoutation](https://www.smu.edu/Meadows/AreasofStudy/CreativeComputation/Center)
+- [Southern Methodist University - Center of Creative Computation](https://www.smu.edu/Meadows/AreasofStudy/CreativeComputation/Center)
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
