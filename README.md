@@ -139,7 +139,7 @@ git clone https://github.com/your_username_/Project-Name.git
 npm install
 ```
 
-4. Make your own .env file as depicted below, substituting the real info where you see lowercase in the example below. Then save it in the top level of the directory. The gitignore file contains .env so this info will not go to the repo. You will need to obtain API keys from several websites to accomplish this. Security: Keep these values secret and DO NOT push them to github. And PLEASE DO NOT use a Metamask wallet that has real currency in it. Make a new wallet that will never hold real currency and use it for the testing. If you are only planning to use the hardhat network, and not a testnet, there is no need to provide any of the info in this file (unless you want gas reports in USD, then provide the coinmarketcap info).
+4. Make your own .env file as depicted below, substituting the real info where you see lowercase in the example below. Then save it in the top level of the directory. The gitignore file contains .env so this info will not go to the repo. You will need to obtain API keys from several websites to accomplish this. Security: Notice that you DO NOT see my .env file pushed to the repo. This is for a reason. Keep these values secret and DO NOT push them to github. And PLEASE DO NOT use a Metamask wallet that has real currency in it. Make a new wallet that will never hold real currency and use it for the testing. If you are only planning to use the hardhat network, and not a testnet, there is no need to provide any of the info in this file (unless you want gas reports in USD, then provide the coinmarketcap info).
 
 ```sh
 REPORT_GAS=true
