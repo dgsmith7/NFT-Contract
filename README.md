@@ -88,7 +88,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](./images/screenshot.png)
+[![Product Name Screen Shot][product-screenshot]](./images/opensea.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
