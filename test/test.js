@@ -1,6 +1,5 @@
 const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
-const { helpers } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 
 describe("CourseNFTContract", async function () {
   let courseNFTContractFactory;
@@ -134,7 +133,7 @@ describe("CourseNFTContract", async function () {
 
     it("should be called and revert if called from low-level transaction", async function () {
       let contractAddress = await courseNFTContract.getAddress();
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       await expect(
         buyer.sendTransaction({
           to: contractAddress,
@@ -167,7 +166,7 @@ describe("CourseNFTContract", async function () {
 
     it("should be called and revert if called from low-level transaction with no data", async function () {
       let contractAddress = await courseNFTContract.getAddress();
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(buyer.sendTransaction({ to: contractAddress })).to.be
         .revertedWithCustomError;
     });
@@ -195,7 +194,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should revert if called with no ether", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(
         courseNFTContract
           .connect(buyer)
@@ -204,7 +203,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should revert if called with too low amount of ether", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(
         courseNFTContract
           .connect(buyer)
@@ -213,7 +212,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should revert if called with too high amount of ether", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(
         courseNFTContract
           .connect(buyer)
@@ -222,7 +221,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should not revert if called with the correct amount of ether", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(
         courseNFTContract
           .connect(buyer)
@@ -231,7 +230,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should revert if called after all tokens are minted", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       for (let i = 0; i < args.max_tokens; i++) {
         courseNFTContract
           .connect(buyer)
@@ -245,7 +244,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should have a totalSupply = 1 with after first mint", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       const expectedValue = 1;
       const mint1 = await courseNFTContract
         .connect(buyer)
@@ -256,7 +255,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should increase the totalSupply by 1 with with each mint", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       const expectedValue = 2;
       const mint1 = await courseNFTContract
         .connect(buyer)
@@ -271,8 +270,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should emit an event when minting is completed", async function () {
-      const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       expect(
         courseNFTContract
           .connect(buyer)
@@ -283,7 +281,7 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should have set the token uri during minting function", async function () {
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
       const uriString = "someString";
       const expectedValue = uriString;
       const mint1 = await courseNFTContract
@@ -295,35 +293,42 @@ describe("CourseNFTContract", async function () {
     });
 
     it("should have paid the owner the value that was sent", async function () {
-      const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-      const [buyer] = await ethers.getSigners();
-      const expectedValue = (await owner.balance()) + args.mint_price;
+      const [owner, artist, buyer] = await ethers.getSigners();
+      const uriString = "someString";
+      let bal = (await ethers.provider.getBalance(owner)).toString();
+      let mint = args.mint_price;
+      let expectedValue = (
+        ethers.parseUnits(bal, 18) + ethers.parseUnits(mint, 18)
+      ).toString();
       const mint1 = await courseNFTContract
         .connect(buyer)
         .mintTo(uriString, { value: args.mint_price });
       mint1.wait(1);
-      const currentValue = await owner.balance;
-      assert.equal(currentValue.toString(), expectedValue);
+      let currentValue = (await ethers.provider.getBalance(owner)).toString();
+      currentValue = ethers.parseUnits(currentValue, 18);
+      expect(currentValue).to.equal(expectedValue);
     });
 
     it("should have a balance of zero after minting", async function () {
       const expectedValue = 0;
-      const [buyer] = await ethers.getSigners();
+      const [owner, artist, buyer] = await ethers.getSigners();
+      const uriString = "someString";
       const mint1 = await courseNFTContract
         .connect(buyer)
         .mintTo(uriString, { value: args.mint_price });
       mint1.wait(1);
-      const currentValue = await currentValue.balance;
+      const currentValue = await ethers.provider.getBalance(courseNFTContract);
       assert.equal(currentValue.toString(), expectedValue);
     });
 
     it("should emit an event after funds are distributed during mint", async function () {
-      const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-      const [buyer] = await ethers.getSigners();
+      //      const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+      const [owner, artist, buyer] = await ethers.getSigners();
+      const uriString = "someString";
       expect(
         courseNFTContract
           .connect(buyer)
-          .mintTo(args.base_uri, { value: args.mint_price })
+          .mintTo(uriString, { value: args.mint_price })
       )
         .to.emit(courseNFTContract, "FundsDistributed")
         .withArgs(owner, args.mint_price);
@@ -350,49 +355,23 @@ describe("CourseNFTContract", async function () {
         args.royaltyBasis
       );
     });
-  });
 
-  describe("setRoylaty function", async function () {
-    this.beforeEach(async function () {
-      courseNFTContractFactory = await ethers.getContractFactory(
-        "CourseNFTContract"
-      );
-      courseNFTContract = await courseNFTContractFactory.deploy(
-        args.mint_price,
-        args.max_tokens,
-        args.base_uri,
-        args.royaltyArtist,
-        args.royaltyBasis
-      );
-      await courseNFTContract.waitForDeployment(
-        args.mint_price,
-        args.max_tokens,
-        args.base_uri,
-        args.royaltyArtist,
-        args.royaltyBasis
-      );
+    it("getMaxSupply() should return the max number of tokens for this NFT", async function () {
+      const expectedValue = args.max_tokens;
+      const currentValue = await courseNFTContract.getMaxSupply();
+      assert.equal(currentValue.toString(), expectedValue);
     });
-  });
 
-  describe("_baseUri function", async function () {
-    this.beforeEach(async function () {
-      courseNFTContractFactory = await ethers.getContractFactory(
-        "CourseNFTContract"
-      );
-      courseNFTContract = await courseNFTContractFactory.deploy(
-        args.mint_price,
-        args.max_tokens,
-        args.base_uri,
-        args.royaltyArtist,
-        args.royaltyBasis
-      );
-      await courseNFTContract.waitForDeployment(
-        args.mint_price,
-        args.max_tokens,
-        args.base_uri,
-        args.royaltyArtist,
-        args.royaltyBasis
-      );
+    it("getMintPrice() should return the purchase price of the NFT", async function () {
+      const expectedValue = args.mint_price;
+      const currentValue = await courseNFTContract.getMintPrice();
+      assert.equal(currentValue.toString(), expectedValue);
+    });
+
+    it("getBaseURI() should return the project URI string", async function () {
+      const expectedValue = args.base_uri;
+      const currentValue = await courseNFTContract.getBaseURI();
+      assert.equal(currentValue.toString(), expectedValue);
     });
   });
 });
