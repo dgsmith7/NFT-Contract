@@ -11,3 +11,6 @@ Minting 3 tokens...
 Token 1 completed.
 Token 2 completed.
 Token 3 completed.
+
+https://mumbai.polygonscan.com/address/0x04B44b1fA02CCd34065b22E8a71834E672131410#code
+https://testnets.opensea.io/assets?search[query]=0x04B44b1fA02CCd34065b22E8a71834E672131410
