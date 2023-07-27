@@ -21,11 +21,11 @@ module.exports = {
     enabled: process.env.REPORT_GAS ? true : false,
     currency: "USD",
     coinmarketcap: COINMARKETCAP_API_KEY,
-    token: "ETH",
+    token: "MATIC",
     outputFile: "gas-report.txt",
     noColors: true,
   },
-  defaultNetwork: "polygonMumbai",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
       chainId: 31337,
@@ -43,7 +43,7 @@ module.exports = {
     },
   },
   solidity: {
-    version: "0.8.9",
+    version: "0.8.9", // use an exact version here and in contract to avoid verification problems
     settings: {
       optimizer: {
         enabled: false, // may cause verification problems if true
