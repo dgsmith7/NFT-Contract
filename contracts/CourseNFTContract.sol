@@ -74,7 +74,6 @@ contract CourseNFTContract is
         _safeMint(msg.sender, newItemId);
         emit MintingCompleted(newItemId, msg.sender);
         s_token_uri_holder = uri;
-        //        super._setTokenURI(newItemId, uri);
         payable(i_owner).transfer(address(this).balance);
         // let platform know everyone was paid
         emit FundsDistributed(i_owner, msg.value);

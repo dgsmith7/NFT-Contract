@@ -143,7 +143,7 @@ This is an example of how to list things you need to use the software and how to
 
 ## Usage
 
-You may confidently download and use this contract (NFT.sol) in your own NFT projects. This is really designed to be used from a front end that will make the appropriate calls to depoy and interact, generate the digital are and upload it to IPFS, and pass in the proper IPFS URLs to the contract and to each token as minted.
+You may confidently download and use this contract (courseNFTContract.sol) in your own NFT projects. This is really designed to be used from a front end that will make the appropriate calls to depoy and interact, generate the digital art and upload it to IPFS, and pass in the proper IPFS URLs to the contract and to each token as minted.
 
 _See my other repo for a full stack working project - coming soon. [Full stack project](https://github.com/dgsmith7?tab=repositories)_
 
@@ -156,8 +156,8 @@ _See my other repo for a full stack working project - coming soon. [Full stack p
 - [x] Set NFT price at depoyment
 - [x] Set token supply limit at deployment
 - [x] Set metadata (IPFS link) at deployment
-- [x] Unit tested with Hardhat toolbox (soon)
-- [x] Staging tested on Mumbai and OpenSea test network (soon)
+- [x] Unit tested with Hardhat toolbox
+- [ ] Staging tested on Mumbai and OpenSea test network (soon)
 
 See the [open issues](https://github.com/dgsmith7/NFT-Contract/issues) for a full list of proposed features (and known issues).
 
