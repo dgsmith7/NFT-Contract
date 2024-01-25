@@ -1,31 +1,29 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.9;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-error CourseNFTContract__MaxSupplyReached();
-error CourseNFTContract__ValueNotEqualPrice();
-error CourseNFTContract__WrongAvenueForThisTransaction();
+error DGSCreativeNFTContract__MaxSupplyReached();
+error DGSCreativeNFTContract__ValueNotEqualPrice();
+error DGSCreativeNFTContract__WrongAvenueForThisTransaction();
 
-contract CourseNFTContract is
+/// @custom:security-contact david@davidgailsmith.com
+contract DGSCreativeNFTContract is
     ERC721,
     ERC721Enumerable,
-    ERC721Burnable,
     ERC721URIStorage,
+    ERC721Burnable,
     ERC721Royalty,
     Ownable,
     ReentrancyGuard
 {
-    using Counters for Counters.Counter;
-
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     uint256 private immutable i_mint_price;
     uint256 private immutable i_max_tokens;
     string private s_base_uri;
@@ -41,7 +39,7 @@ contract CourseNFTContract is
         string memory _base_uri,
         address _royaltyArtist,
         uint96 _royaltyBasis
-    ) ERC721("CourseNFTContract", "CNC") {
+    ) ERC721("DGSCreativeNFTContract", "DGS") Ownable(msg.sender) {
         i_mint_price = _mint_price;
         i_max_tokens = _max_tokens;
         s_base_uri = _base_uri;
@@ -50,34 +48,33 @@ contract CourseNFTContract is
     }
 
     receive() external payable {
-        revert CourseNFTContract__WrongAvenueForThisTransaction();
+        revert DGSCreativeNFTContract__WrongAvenueForThisTransaction();
     }
 
     fallback() external payable {
-        revert CourseNFTContract__WrongAvenueForThisTransaction();
+        revert DGSCreativeNFTContract__WrongAvenueForThisTransaction();
     }
 
     function mintTo(
         string calldata uri // ipfs url string
     ) public payable nonReentrant returns (uint256) {
-        uint256 tokenId = _tokenIdCounter.current();
-        // check for supply limits
+        uint256 tokenId = _tokenIdCounter;
+        // check or supply limits
         if (tokenId >= i_max_tokens) {
-            revert CourseNFTContract__MaxSupplyReached();
+            revert DGSCreativeNFTContract__MaxSupplyReached();
         }
-        // make sure there is money
+        // make sure there us the right amount of money
         if (msg.value != i_mint_price) {
-            revert CourseNFTContract__ValueNotEqualPrice();
+            revert DGSCreativeNFTContract__ValueNotEqualPrice();
         }
-        _tokenIdCounter.increment();
-        uint256 newItemId = _tokenIdCounter.current();
+        _tokenIdCounter++;
+        uint256 newItemId = _tokenIdCounter;
         _safeMint(msg.sender, newItemId);
         emit MintingCompleted(newItemId, msg.sender);
         s_token_uri_holder = uri;
+        _setTokenURI(newItemId, uri);
         payable(i_owner).transfer(address(this).balance);
-        // let platform know everyone was paid
         emit FundsDistributed(i_owner, msg.value);
-        // let us know new token id
         return newItemId;
     }
 
@@ -93,6 +90,10 @@ contract CourseNFTContract is
         return s_base_uri;
     }
 
+    function contractURI() public view returns (string memory) {
+        return s_base_uri;
+    }
+
     function setRoyalty(
         // called by platform to set roylaty rates and artist payout address
         address _receiver,
@@ -105,27 +106,27 @@ contract CourseNFTContract is
         return s_base_uri;
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal override(ERC721, ERC721Enumerable) {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-    }
-
     // The following functions are overrides required by Solidity.
 
-    function _burn(
-        uint256 tokenId
-    ) internal override(ERC721, ERC721URIStorage, ERC721Royalty) {
-        super._burn(tokenId);
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override(ERC721, ERC721Enumerable) returns (address) {
+        return super._update(to, tokenId, auth);
+    }
+
+    function _increaseBalance(
+        address account,
+        uint128 value
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._increaseBalance(account, value);
     }
 
     function tokenURI(
         uint256 tokenId
     ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-        _requireMinted(tokenId);
+        _requireOwned(tokenId);
         return s_token_uri_holder;
     }
 
